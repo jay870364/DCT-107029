@@ -32,7 +32,8 @@
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="InstructorID" Type="int" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="CreateOn" Type="date" />
+          <Property Name="CreateOn" Type="datetime" />
+          <Property Name="ModifiedOn" Type="datetime" />
         </EntityType>
         <EntityType Name="Enrollment">
           <Key>
@@ -243,7 +244,7 @@
             <Parameter Name="DepartmentID" Mode="In" Type="Int32" />
             <Parameter Name="RowVersion_Original" Mode="In" Type="Binary" />
           </FunctionImport>
-          <FunctionImport Name="Department_Insert" ReturnType="Collection(ContosoUniversityModel.Department_Insert_Result1)">
+          <FunctionImport Name="Department_Insert">
             <Parameter Name="Name" Mode="In" Type="String" />
             <Parameter Name="Budget" Mode="In" Type="Decimal" />
             <Parameter Name="StartDate" Mode="In" Type="DateTime" />
@@ -296,10 +297,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="Department_Insert_Result1">
-          <Property Type="Int32" Name="DepartmentID" Nullable="false" />
-          <Property Type="Binary" Name="RowVersion" Nullable="false" MaxLength="8" />
-        </ComplexType>
         <EntityType Name="Enrollment">
           <Key>
             <PropertyRef Name="EnrollmentID" />
@@ -348,9 +345,10 @@
           <Property Name="Budget" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="InstructorID" Type="Int32" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" ConcurrencyMode="Fixed" />
           <NavigationProperty Name="Course" Relationship="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID" FromRole="Department" ToRole="Course" />
-          <Property Name="CreateOn" Type="DateTime" Precision="0" />
+          <Property Name="CreateOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_dbo_Course_dbo_Department_DepartmentID">
           <End Type="ContosoUniversityModel.Department" Role="Department" Multiplicity="1">
@@ -412,12 +410,6 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="Department_Delete" FunctionName="ContosoUniversityModel.Store.Department_Delete" />
           <FunctionImportMapping FunctionImportName="Department_Insert" FunctionName="ContosoUniversityModel.Store.Department_Insert">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ContosoUniversityModel.Department_Insert_Result1">
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-              </ComplexTypeMapping>
-            </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Department_Update" FunctionName="ContosoUniversityModel.Store.Department_Update" />
           <EntitySetMapping Name="EnrollmentSet">
@@ -433,6 +425,7 @@
           <EntitySetMapping Name="Department">
             <EntityTypeMapping TypeName="ContosoUniversityModel.Department">
               <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
                 <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="InstructorID" ColumnName="InstructorID" />
@@ -441,6 +434,28 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
               </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="ContosoUniversityModel.Department">
+              <ModificationFunctionMapping>
+                <InsertFunction FunctionName="ContosoUniversityModel.Store.Department_Insert">
+                  <ScalarProperty Name="InstructorID" ParameterName="InstructorID" />
+                  <ScalarProperty Name="StartDate" ParameterName="StartDate" />
+                  <ScalarProperty Name="Budget" ParameterName="Budget" />
+                  <ScalarProperty Name="Name" ParameterName="Name" />
+                </InsertFunction>
+                <UpdateFunction FunctionName="ContosoUniversityModel.Store.Department_Update">
+                  <ScalarProperty Name="RowVersion" ParameterName="RowVersion_Original" Version="Current" />
+                  <ScalarProperty Name="InstructorID" ParameterName="InstructorID" Version="Current" />
+                  <ScalarProperty Name="StartDate" ParameterName="StartDate" Version="Current" />
+                  <ScalarProperty Name="Budget" ParameterName="Budget" Version="Current" />
+                  <ScalarProperty Name="Name" ParameterName="Name" Version="Current" />
+                  <ScalarProperty Name="DepartmentID" ParameterName="DepartmentID" Version="Current" />
+                </UpdateFunction>
+                <DeleteFunction FunctionName="ContosoUniversityModel.Store.Department_Delete">
+                  <ScalarProperty Name="RowVersion" ParameterName="RowVersion_Original" />
+                  <ScalarProperty Name="DepartmentID" ParameterName="DepartmentID" />
+                </DeleteFunction>
+              </ModificationFunctionMapping>
             </EntityTypeMapping>
           </EntitySetMapping>
         </EntityContainerMapping>

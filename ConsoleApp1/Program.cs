@@ -14,7 +14,7 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
-           
+
             using (var db = new ContosoUniversityEntities())
             {
                 using (var trans = db.Database.BeginTransaction())
@@ -23,19 +23,29 @@ namespace ConsoleApp1
                     {
                         db.Database.Log = Console.WriteLine;
 
-                        var department = db.Department.Include(p => p.Course);
+                        //db.Configuration.LazyLoadingEnabled = false;
+                        //db.Configuration.ProxyCreationEnabled = false;
 
-                        foreach (var tmp in department.Where(x=>x.DepartmentID<2))
-                        {
-                            Console.WriteLine(tmp.Name);
-                        }
-                        QueryCourse(db);
+                        //var department = db.Department.Include(p => p.Course);
 
-                        InsertDepartment(db);
+                        var department = db.Department.Find(57);
+                        department.Name = System.Console.ReadLine();
+                        db.SaveChanges();
+                        //foreach (var dept in department)
+                        //{
+                        //    Console.WriteLine(dept.Name);
+                        //    foreach(var item in dept.Course)
+                        //    {
+                        //        Console.WriteLine(item.Person);
+                        //    }
+                        //}
+                        //QueryCourse(db);
+                        //for (var i = 0;i<5;i++)
+                        //InsertDepartment(db);
 
-                        UpdateDepartment(db);
-
-                        RemoveDepartment(db);
+                        //UpdateDepartment(db);
+                        //RemoveDepartmentByState(db);
+                        //RemoveDepartment(db);
                         trans.Commit();
                     }
                     catch (Exception ex)
@@ -43,10 +53,16 @@ namespace ConsoleApp1
                         trans.Rollback();
                         System.Diagnostics.Debug.WriteLine(ex.ToString());
                     }
-                  
+
                 }
-                
             }
+            using (var db = new ContosoUniversityEntities())
+            {
+                db.Database.Log = Console.WriteLine;
+                var dept = db.Department.Find(57);
+                Console.WriteLine($"{dept.DepartmentID}\t{dept.Name}");
+            }
+            System.Console.Read();
         }
 
         private static void InsertDepartment(ContosoUniversityEntities db)
@@ -65,6 +81,10 @@ namespace ConsoleApp1
             InsertedId = dept.DepartmentID;
         }
 
+        private static void InsertFromSelect(ContosoUniversityEntities db)
+        {
+            var dept = db.Department.Find(1);
+        }
         private static void UpdateDepartment(ContosoUniversityEntities db)
         {
             var dept = db.Department.Find(InsertedId);
@@ -72,6 +92,12 @@ namespace ConsoleApp1
             db.SaveChanges();
         }
 
+        private static void RemoveDepartmentByState(ContosoUniversityEntities db)
+        {
+            db.Entry(new Department() { DepartmentID = 56 }).State = EntityState.Deleted;
+            db.SaveChanges();
+
+        }
         private static void RemoveDepartment(ContosoUniversityEntities db)
         {
             db.Department.Remove(db.Department.Find(InsertedId));

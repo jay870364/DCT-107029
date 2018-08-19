@@ -46,7 +46,7 @@ namespace ConsoleApp1.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Department_Delete", departmentIDParameter, rowVersion_OriginalParameter);
         }
     
-        public virtual ObjectResult<Department_Insert_Result1> Department_Insert(string name, Nullable<decimal> budget, Nullable<System.DateTime> startDate, Nullable<int> instructorID)
+        public virtual int Department_Insert(string name, Nullable<decimal> budget, Nullable<System.DateTime> startDate, Nullable<int> instructorID)
         {
             var nameParameter = name != null ?
                 new ObjectParameter("Name", name) :
@@ -64,7 +64,7 @@ namespace ConsoleApp1.Models
                 new ObjectParameter("InstructorID", instructorID) :
                 new ObjectParameter("InstructorID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Department_Insert_Result1>("Department_Insert", nameParameter, budgetParameter, startDateParameter, instructorIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Department_Insert", nameParameter, budgetParameter, startDateParameter, instructorIDParameter);
         }
     
         public virtual ObjectResult<byte[]> Department_Update(Nullable<int> departmentID, string name, Nullable<decimal> budget, Nullable<System.DateTime> startDate, Nullable<int> instructorID, byte[] rowVersion_Original)
