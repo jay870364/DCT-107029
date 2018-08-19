@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace ConsoleApp1
 {
@@ -22,6 +23,12 @@ namespace ConsoleApp1
                     {
                         db.Database.Log = Console.WriteLine;
 
+                        var department = db.Department.Include(p => p.Course);
+
+                        foreach (var tmp in department.Where(x=>x.DepartmentID<2))
+                        {
+                            Console.WriteLine(tmp.Name);
+                        }
                         QueryCourse(db);
 
                         InsertDepartment(db);

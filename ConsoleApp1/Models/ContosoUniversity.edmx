@@ -32,7 +32,7 @@
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="InstructorID" Type="int" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
-          <Property Name="CreateOn2" Type="date" StoreGeneratedPattern="None" />
+          <Property Name="CreateOn" Type="date" />
         </EntityType>
         <EntityType Name="Enrollment">
           <Key>
@@ -350,7 +350,7 @@
           <Property Name="InstructorID" Type="Int32" />
           <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Course" Relationship="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID" FromRole="Department" ToRole="Course" />
-          <Property Name="CreateOn2" Type="DateTime" Precision="0" annotation:StoreGeneratedPattern="None" />
+          <Property Name="CreateOn" Type="DateTime" Precision="0" />
         </EntityType>
         <Association Name="FK_dbo_Course_dbo_Department_DepartmentID">
           <End Type="ContosoUniversityModel.Department" Role="Department" Multiplicity="1">
@@ -433,7 +433,7 @@
           <EntitySetMapping Name="Department">
             <EntityTypeMapping TypeName="ContosoUniversityModel.Department">
               <MappingFragment StoreEntitySet="Department">
-                <ScalarProperty Name="CreateOn2" ColumnName="CreateOn2" />
+                <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
                 <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
                 <ScalarProperty Name="InstructorID" ColumnName="InstructorID" />
                 <ScalarProperty Name="StartDate" ColumnName="StartDate" />
