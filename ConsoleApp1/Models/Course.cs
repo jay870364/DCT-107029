@@ -17,8 +17,8 @@ namespace ConsoleApp1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Course()
         {
-            this.Enrollment = new HashSet<Enrollment>();
             this.Person = new HashSet<Person>();
+            this.Enrollment = new HashSet<Enrollment>();
         }
     
         public int CourseID { get; set; }
@@ -26,10 +26,10 @@ namespace ConsoleApp1.Models
         public int Credits { get; set; }
         public int DepartmentID { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Person> Person { get; set; }
         public virtual Department Department { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Enrollment> Enrollment { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Person> Person { get; set; }
     }
 }

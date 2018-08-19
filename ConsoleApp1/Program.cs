@@ -13,6 +13,7 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
+           
             using (var db = new ContosoUniversityEntities())
             {
                 QueryCourse(db);
