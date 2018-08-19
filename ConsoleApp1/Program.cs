@@ -23,30 +23,12 @@ namespace ConsoleApp1
                     {
                         db.Database.Log = Console.WriteLine;
 
-                        //db.Configuration.LazyLoadingEnabled = false;
-                        //db.Configuration.ProxyCreationEnabled = false;
+                        var department = db.GetDepartment();
+                        foreach (var item in department)
+                            Console.WriteLine(item.Name);
+                        //db.SaveChanges();
 
-                        //var department = db.Department.Include(p => p.Course);
-
-                        var department = db.Department.Find(57);
-                        department.Name = System.Console.ReadLine();
-                        db.SaveChanges();
-                        //foreach (var dept in department)
-                        //{
-                        //    Console.WriteLine(dept.Name);
-                        //    foreach(var item in dept.Course)
-                        //    {
-                        //        Console.WriteLine(item.Person);
-                        //    }
-                        //}
-                        //QueryCourse(db);
-                        //for (var i = 0;i<5;i++)
-                        //InsertDepartment(db);
-
-                        //UpdateDepartment(db);
-                        //RemoveDepartmentByState(db);
-                        //RemoveDepartment(db);
-                        trans.Commit();
+                        //trans.Commit();
                     }
                     catch (Exception ex)
                     {
@@ -56,12 +38,12 @@ namespace ConsoleApp1
 
                 }
             }
-            using (var db = new ContosoUniversityEntities())
-            {
-                db.Database.Log = Console.WriteLine;
-                var dept = db.Department.Find(57);
-                Console.WriteLine($"{dept.DepartmentID}\t{dept.Name}");
-            }
+            //using (var db = new ContosoUniversityEntities())
+            //{
+            //    db.Database.Log = Console.WriteLine;
+            //    var dept = db.Department.Find(57);
+            //    Console.WriteLine($"{dept.DepartmentID}\t{dept.Name}");
+            //}
             System.Console.Read();
         }
 

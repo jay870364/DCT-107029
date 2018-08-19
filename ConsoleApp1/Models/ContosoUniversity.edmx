@@ -162,6 +162,7 @@
           <Parameter Name="InstructorID" Type="int" Mode="In" />
           <Parameter Name="RowVersion_Original" Type="timestamp" Mode="In" />
         </Function>
+        <Function Name="GetDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ContosoUniversityModelStoreContainer">
           <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourseInstructor" EntityType="Self.CourseInstructor" Schema="dbo" store:Type="Tables" />
@@ -272,6 +273,7 @@
             <End Role="Department" EntitySet="Department" />
             <End Role="Course" EntitySet="Course" />
           </AssociationSet>
+          <FunctionImport Name="GetDepartment" EntitySet="Department" ReturnType="Collection(ContosoUniversityModel.Department)" />
         </EntityContainer>
         <ComplexType Name="Department_Insert_Result">
           <Property Type="Int32" Name="DepartmentID" Nullable="false" />
@@ -364,6 +366,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetDepartment_Result">
+          <Property Type="Int32" Name="DepartmentID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Budget" Nullable="false" Precision="19" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="InstructorID" Nullable="true" />
+          <Property Type="Binary" Name="RowVersion" Nullable="false" MaxLength="8" />
+          <Property Type="DateTime" Name="CreateOn" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ModifiedOn" Nullable="true" Precision="23" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -458,6 +470,8 @@
               </ModificationFunctionMapping>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDepartment" FunctionName="ContosoUniversityModel.Store.GetDepartment">
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

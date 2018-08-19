@@ -73,6 +73,9 @@
     <Compile Include="Models\Enrollment.cs">
       <DependentUpon>ContosoUniversity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetDepartment_Result.cs">
+      <DependentUpon>ContosoUniversity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\OfficeAssignment.cs">
       <DependentUpon>ContosoUniversity.tt</DependentUpon>
     </Compile>
