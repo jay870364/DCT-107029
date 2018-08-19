@@ -18,7 +18,6 @@ namespace ConsoleApp1.Models
         public Person()
         {
             this.Course = new HashSet<Course>();
-            this.Department = new HashSet<Department>();
             this.Enrollment = new HashSet<Enrollment>();
         }
     
@@ -32,8 +31,6 @@ namespace ConsoleApp1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Course> Course { get; set; }
         public virtual OfficeAssignment OfficeAssignment { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Department> Department { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Enrollment> Enrollment { get; set; }
     }

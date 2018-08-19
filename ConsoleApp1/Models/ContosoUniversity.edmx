@@ -32,6 +32,7 @@
           <Property Name="StartDate" Type="datetime" Nullable="false" />
           <Property Name="InstructorID" Type="int" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="CreateOn2" Type="date" StoreGeneratedPattern="None" />
         </EntityType>
         <EntityType Name="Enrollment">
           <Key>
@@ -98,18 +99,6 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="CourseInstructor">
-              <PropertyRef Name="InstructorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Department_dbo_Instructor_InstructorID">
-          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
-          <End Role="Department" Type="Self.Department" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Department">
               <PropertyRef Name="InstructorID" />
             </Dependent>
           </ReferentialConstraint>
@@ -191,10 +180,6 @@
             <End Role="Person" EntitySet="Person" />
             <End Role="CourseInstructor" EntitySet="CourseInstructor" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Department_dbo_Instructor_InstructorID" Association="Self.FK_dbo_Department_dbo_Instructor_InstructorID">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Department" EntitySet="Department" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Enrollment_dbo_Course_CourseID" Association="Self.FK_dbo_Enrollment_dbo_Course_CourseID">
             <End Role="Course" EntitySet="Course" />
             <End Role="Enrollment" EntitySet="Enrollment" />
@@ -221,8 +206,8 @@
           <Property Name="Credits" Type="Int32" Nullable="false" />
           <Property Name="DepartmentID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Person" Relationship="Self.CourseInstructor" FromRole="Course" ToRole="Person" />
-          <NavigationProperty Name="Department" Relationship="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID1" FromRole="Course" ToRole="Department1" />
           <NavigationProperty Name="Enrollment" Relationship="ContosoUniversityModel.FK_dbo_Enrollment_dbo_Course_CourseID1" FromRole="Course" ToRole="Enrollment1" />
+          <NavigationProperty Name="Department" Relationship="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID" FromRole="Course" ToRole="Department" />
         </EntityType>
         <EntityType Name="Person">
           <Key>
@@ -236,7 +221,6 @@
           <Property Name="Discriminator" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Course" Relationship="Self.CourseInstructor" FromRole="Person" ToRole="Course" />
           <NavigationProperty Name="OfficeAssignment" Relationship="ContosoUniversityModel.FK_dbo_OfficeAssignment_dbo_Instructor_InstructorID" FromRole="Person" ToRole="OfficeAssignment" />
-          <NavigationProperty Name="Department" Relationship="ContosoUniversityModel.FK_dbo_Department_dbo_Instructor_InstructorID1" FromRole="Person" ToRole="Department1" />
           <NavigationProperty Name="Enrollment" Relationship="ContosoUniversityModel.FK_dbo_Enrollment_dbo_Person_StudentID1" FromRole="Person" ToRole="Enrollment1" />
         </EntityType>
         <Association Name="CourseInstructor">
@@ -273,23 +257,19 @@
             <Parameter Name="InstructorID" Mode="In" Type="Int32" />
             <Parameter Name="RowVersion_Original" Mode="In" Type="Binary" />
           </FunctionImport>
-          <EntitySet Name="DepartmentSet" EntityType="ContosoUniversityModel.Department" />
           <EntitySet Name="EnrollmentSet" EntityType="ContosoUniversityModel.Enrollment" />
-          <AssociationSet Name="FK_dbo_Course_dbo_Department_DepartmentID1" Association="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID1">
-            <End Role="Department1" EntitySet="DepartmentSet" />
-            <End Role="Course" EntitySet="Course" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Enrollment_dbo_Course_CourseID1" Association="ContosoUniversityModel.FK_dbo_Enrollment_dbo_Course_CourseID1">
             <End Role="Course" EntitySet="Course" />
             <End Role="Enrollment1" EntitySet="EnrollmentSet" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Department_dbo_Instructor_InstructorID1" Association="ContosoUniversityModel.FK_dbo_Department_dbo_Instructor_InstructorID1">
-            <End Role="Person" EntitySet="Person" />
-            <End Role="Department1" EntitySet="DepartmentSet" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Enrollment_dbo_Person_StudentID1" Association="ContosoUniversityModel.FK_dbo_Enrollment_dbo_Person_StudentID1">
             <End Role="Person" EntitySet="Person" />
             <End Role="Enrollment1" EntitySet="EnrollmentSet" />
+          </AssociationSet>
+          <EntitySet Name="Department" EntityType="ContosoUniversityModel.Department" />
+          <AssociationSet Name="FK_dbo_Course_dbo_Department_DepartmentID" Association="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="Course" EntitySet="Course" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="Department_Insert_Result">
@@ -320,19 +300,6 @@
           <Property Type="Int32" Name="DepartmentID" Nullable="false" />
           <Property Type="Binary" Name="RowVersion" Nullable="false" MaxLength="8" />
         </ComplexType>
-        <EntityType Name="Department">
-          <Key>
-            <PropertyRef Name="DepartmentID" />
-          </Key>
-          <Property Name="DepartmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Budget" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="InstructorID" Type="Int32" />
-          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="Course" Relationship="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID1" FromRole="Department1" ToRole="Course" />
-          <NavigationProperty Name="Person" Relationship="ContosoUniversityModel.FK_dbo_Department_dbo_Instructor_InstructorID1" FromRole="Department1" ToRole="Person" />
-        </EntityType>
         <EntityType Name="Enrollment">
           <Key>
             <PropertyRef Name="EnrollmentID" />
@@ -344,20 +311,6 @@
           <NavigationProperty Name="Course" Relationship="ContosoUniversityModel.FK_dbo_Enrollment_dbo_Course_CourseID1" FromRole="Enrollment1" ToRole="Course" />
           <NavigationProperty Name="Person" Relationship="ContosoUniversityModel.FK_dbo_Enrollment_dbo_Person_StudentID1" FromRole="Enrollment1" ToRole="Person" />
         </EntityType>
-        <Association Name="FK_dbo_Course_dbo_Department_DepartmentID1">
-          <End Type="ContosoUniversityModel.Department" Role="Department1" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="ContosoUniversityModel.Course" Role="Course" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Department1">
-              <PropertyRef Name="DepartmentID" />
-            </Principal>
-            <Dependent Role="Course">
-              <PropertyRef Name="DepartmentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_Enrollment_dbo_Course_CourseID1">
           <End Type="ContosoUniversityModel.Course" Role="Course" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -372,18 +325,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_Department_dbo_Instructor_InstructorID1">
-          <End Type="ContosoUniversityModel.Person" Role="Person" Multiplicity="0..1" />
-          <End Type="ContosoUniversityModel.Department" Role="Department1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Department1">
-              <PropertyRef Name="InstructorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_Enrollment_dbo_Person_StudentID1">
           <End Type="ContosoUniversityModel.Person" Role="Person" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -395,6 +336,33 @@
             </Principal>
             <Dependent Role="Enrollment1">
               <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Budget" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="InstructorID" Type="Int32" />
+          <Property Name="RowVersion" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Course" Relationship="ContosoUniversityModel.FK_dbo_Course_dbo_Department_DepartmentID" FromRole="Department" ToRole="Course" />
+          <Property Name="CreateOn2" Type="DateTime" Precision="0" annotation:StoreGeneratedPattern="None" />
+        </EntityType>
+        <Association Name="FK_dbo_Course_dbo_Department_DepartmentID">
+          <End Type="ContosoUniversityModel.Department" Role="Department" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="ContosoUniversityModel.Course" Role="Course" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Course">
+              <PropertyRef Name="DepartmentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -452,18 +420,6 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Department_Update" FunctionName="ContosoUniversityModel.Store.Department_Update" />
-          <EntitySetMapping Name="DepartmentSet">
-            <EntityTypeMapping TypeName="ContosoUniversityModel.Department">
-              <MappingFragment StoreEntitySet="Department">
-                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
-                <ScalarProperty Name="InstructorID" ColumnName="InstructorID" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="Budget" ColumnName="Budget" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="EnrollmentSet">
             <EntityTypeMapping TypeName="ContosoUniversityModel.Enrollment">
               <MappingFragment StoreEntitySet="Enrollment">
@@ -471,6 +427,19 @@
                 <ScalarProperty Name="StudentID" ColumnName="StudentID" />
                 <ScalarProperty Name="CourseID" ColumnName="CourseID" />
                 <ScalarProperty Name="EnrollmentID" ColumnName="EnrollmentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Department">
+            <EntityTypeMapping TypeName="ContosoUniversityModel.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="CreateOn2" ColumnName="CreateOn2" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="InstructorID" ColumnName="InstructorID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Budget" ColumnName="Budget" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

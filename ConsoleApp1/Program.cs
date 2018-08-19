@@ -16,13 +16,29 @@ namespace ConsoleApp1
            
             using (var db = new ContosoUniversityEntities())
             {
-                QueryCourse(db);
+                using (var trans = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        db.Database.Log = Console.WriteLine;
 
-                InsertDepartment(db);
+                        QueryCourse(db);
 
-                UpdateDepartment(db);
+                        InsertDepartment(db);
 
-                RemoveDepartment(db);
+                        UpdateDepartment(db);
+
+                        RemoveDepartment(db);
+                        trans.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    }
+                  
+                }
+                
             }
         }
 
@@ -33,6 +49,7 @@ namespace ConsoleApp1
                 Name = "Will",
                 Budget = 100,
                 StartDate = DateTime.Now
+
             };
 
             db.Department.Add(dept);
